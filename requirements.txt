@@ -1,3 +1,7 @@
+# Local package install 
+-e .
+
+#Thirds party packages
 dvc
 dvc[gdrive]
 scikit-learn
