@@ -6,6 +6,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.metrics import mean_squared_error,mean_absolute_error, r2_score
 from get_data import read_params
 import joblib
+import json
 
 def metrics(pred, actual):
     mse = mean_squared_error(actual,pred)
@@ -41,8 +42,28 @@ def train_evaluate(config_path):
     (mse,mae,r2,rmse) = metrics(y_pred,y_test)
     print("MSE is : ",mse)
     print("MAE is : ",mae)
-    print("r2 score is : ", r2)
+    print("r2 score is : ",r2)
     print("rmse is : ",rmse)
+
+    scores_file = config["reports"]["scores"]
+    params_file = config["reports"]["params"]
+
+
+    with open(scores_file, 'w') as f:
+        scores = {
+            "mse": mse,
+            "mae": mae,
+            "r2": r2,
+            "rmse": rmse,
+        }
+        json.dump(scores, f, indent=4)
+
+    with open(params_file, 'w') as f:
+        params = {
+            "alpha": alpha,
+            "l1_ratio": l1_ratio,
+        }
+        json.dump(params, f, indent=4)
 
     os.makedirs(model_dir, exist_ok=True)
     model_path=os.path.join(model_dir,"model.joblib")
